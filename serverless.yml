@@ -1,0 +1,45 @@
+service: first-serverless-app
+frameworkVersion: '3'
+useDotenv: true
+plugins:
+    - serverless-offline
+    - serverless-esbuild
+    - serverless-prune-plugin
+
+custom:
+    serverless-offline:
+        httpPort: 5001
+    esbuild:
+        bundle: true # Bundles all dependencies into a single file.
+        minify: true # Reduces the file size for faster execution.
+        sourcemap: false
+        keepNames: true
+        target: node20
+        platform: node
+    prune:
+    automatic: true  # Runs automatically after deployment
+    number: 3 # Keeps only the last 3 versions
+
+provider:
+    name: aws
+    region: us-east-1
+    runtime: nodejs20.x
+    memorySize: 128
+    timeout: 30
+    versionFunctions: false
+    environment:
+        example_env: ${env:example_env}
+    apiGateway:
+        apiKeys:
+            -
+                name: testApiKey
+                value: ${env:test_api_key}
+
+functions:
+    myFunction:
+        handler: src/handler.example
+        events:
+            -
+                http:
+                    path: /v1/example
+                    method: get
