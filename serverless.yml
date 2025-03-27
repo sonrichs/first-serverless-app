@@ -16,9 +16,11 @@ custom:
         keepNames: true
         target: node20
         platform: node
-    prune:
-    automatic: true  # Runs automatically after deployment
-    number: 3 # Keeps only the last 3 versions
+        external:
+            - aws-sdk # Exclude AWS SDK since it's available in AWS Lambda by default
+        prune:
+            automatic: true  # Runs automatically after deployment
+            number: 3 # Keeps only the last 3 versions
 
 provider:
     name: aws
